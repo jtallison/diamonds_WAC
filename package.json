@@ -1,6 +1,6 @@
 {
   "name": "diamonds",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "interactive system for poetry",
   "main": "app.js",
   "scripts": {
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.cct.lsu.edu:dostrenko/diamonds.git"
+    "url": "https://github.com/jesseallison/diamonds_WAC.git"
   },
   "keywords": [
     "poetry",
     "nlp",
     "art"
   ],
-  "author": "Derick Ostrneko, Jesse Allison, Vincent Cellucci",
+  "author": "Derick Ostrenko, Jesse Allison, Vincent Cellucci",
   "license": "ISC",
   "dependencies": {
     "csv-2-redis": "0.0.10",

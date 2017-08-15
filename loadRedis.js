@@ -1,3 +1,11 @@
+// ************************************************************************
+//
+//		Load Redis server with Ted talk transcripts
+//
+//	to run type node loadRedis.js
+//
+// ************************************************************************
+
 // load required modules
 var redis = require("redis");
 var client = redis.createClient();
@@ -10,11 +18,14 @@ client.on("error", function (err) {
 });
 
 // list name for storing as a list
-var listName = "items";
+// var listName = "items";
+
 // TextName for storing as a set
 var textName = "tedTalks"
+
 // Path to the data to load.  csv file.
 var dataSet = "data/corpus.csv";
+
 
 // clear the list (if using a list)
 //client.ltrim(listName, -1, -2, handleTrim);
@@ -35,10 +46,12 @@ function handleRow(data) {
   // console.log(data.title, "by", data.author)
 
 				// ---- Load the texts into the set.
+				
 				// Uncomment if using a list instead of sets to store the texts. //
 	// client.rpush(listName, JSON.stringify(data, escape), redis.print);
 		// Load the data as a set //
 	// console.log(escape);
+	
 	var jsonString = JSON.stringify(data, escape);
 	client.sadd(textName, jsonString);
 	console.log(jsonString)
@@ -61,19 +74,7 @@ function handleRow(data) {
 		.replace(/[\r]/g, ' ')
 		.replace(/[\t]/g, ' ')
 		.replace(/[-]/g, '')
-		// .replace(/[\']/g, '')
-		// .replace(/[\"]/g, '')
-		// .replace(/[,]/g, '')
-		// .replace(/[\\]/g, '')
-		// .replace(/[\/]/g, '\\/')
-		// .replace(/[\b]/g, '\\b')
-		// .replace(/[\f]/g, '\\f')
-		// .replace(/[Í]/g, '')
-		// .replace(/[\n]/g, '\\n')
-		// .replace(/[\r]/g, ' ')
-		// .replace(/[\t]/g, '\\t')
-	    ;
-	}
+	;}
 }
 
 // when done reading the file display total number of items and quit redis connection
@@ -89,5 +90,6 @@ function handleEnd() {
 	// });
 
 	// client.lindex(listName, 1, function (err, data) {console.log(data)})
+	
 	client.quit();
 }
