@@ -20,7 +20,8 @@
 //  - redis for interworker communications/data
 
 var cluster = require('cluster');
-var workerNumber = require('os').cpus().length*2;
+// var workerNumber = require('os').cpus().length*2;
+var workerNumber = 4;
 var express = require('express');
 var http = require('http');
 var sio = require('socket.io');

@@ -1,6 +1,7 @@
 var DiamondSound = function () {
   this.tone = new Tone();
 
+
   this.pitchCollection = [55, 57, 59, 61, 62, 64, 66, 67, 68, 69, 71, 73, 75, 76, 78, 80, 82, 83];
   this.pitch = this.pitchCollection[Math.floor(Math.random() * (this.pitchCollection.length))];
 
@@ -18,7 +19,7 @@ var DiamondSound = function () {
     //"wet": 0.8
   }).connect(this.gainMaster).start();
 
-  this.synth = new Tone.SimpleSynth({
+  this.synth = new Tone.Synth({
     "oscillator" : {
       "type" : "sine"
    },
@@ -48,8 +49,9 @@ var DiamondSound = function () {
 
 
   //this.gainy = new Tone.Gain().connect(this.gainMaster);
-  // this.filt2 = new Tone.Filter(this.tone.midiToNote(this.pitch+12), "bandpass").connect(this.gainy);
-  this.filt = new Tone.Filter(this.tone.midiToNote(this.pitch+12), "bandpass").connect(this.gainMaster);
+  // this.filt2 = new Tone.Filter(nxMusic.mton(this.pitch+12), "bandpass").connect(this.gainy);
+//  this.filt = new Tone.Filter(Tone.Frequency(this.pitch+12,'midi').toNote(), "bandpass").connect(this.gainMaster);
+	this.filt = new Tone.Filter(nxMusic.mtof(this.pitch+12), "bandpass").connect(this.gainMaster);
   this.filt.Q.value = 15;
   this.filt.gain.value = 50;
   // this.filt2.Q.value = 2;
@@ -57,7 +59,7 @@ var DiamondSound = function () {
   // this.ns = new Tone.Noise('pink').connect(this.filt);
   //this.gainy.gain.value = 10.;
 
-  this.synth.triggerAttackRelease("C4", "8n",{} , 0.25);
+  //this.synth.triggerAttackRelease("C4", "8n",{} , 0.25);
 
   meSpeak.setAudioContext(this.tone.context);
   meSpeak.speakToNode(this.filt);
@@ -71,21 +73,21 @@ DiamondSound.prototype.audienceEnable = function(enabled) {
 		console.log('enabled? ', enabled);
 	if(enabled) {
 		// this.gainMaster.volume.mute = false;
-		this.gainMaster.volume.val = 0.;
+		this.gainMaster.volume.value = 0.;
 		this.chordSynth.set("volume", this.chordVolume);
 	} else {
 		// this.gainMaster.volume.mute = true;
-		this.gainMaster.volume.val = -96;
+		this.gainMaster.volume.value = -96;
 		this.chordSynth.set("volume", -96);
 	}
 }
 
 DiamondSound.prototype.playPitch = function () {
-  this.synth.triggerAttackRelease(this.tone.midiToNote(this.pitch+12), 5);
+  this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
 };
 
 DiamondSound.prototype.triggerPitch = function () {
-  this.synth.triggerAttackRelease(this.tone.midiToNote(this.pitch+12), 5);
+  this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
   // socket.emit('triggerPitch', dSound.pitch);
 };
 
@@ -97,7 +99,7 @@ DiamondSound.prototype.playChord = function (chordNotes, chordLength) {
     this.chordLength = chordLength;
   }
 
-  this.chordSynth.triggerAttackRelease(this.chord.map(this.tone.midiToNote), this.chordLength);
+  this.chordSynth.triggerAttackRelease(this.chord.map(nxMusic.mton), this.chordLength);
 };
 
 DiamondSound.prototype.sustainChord = function (chordNotes, chordLength) {
@@ -148,13 +150,13 @@ DiamondSound.prototype.playEnding = function() {
 
 
 DiamondSound.prototype.triggerDiamonds = function() {
-  this.synth.triggerAttackRelease(this.tone.midiToNote(this.pitch+12), 5);
+  this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
   this.playerDiamonds.start();
 };
 
 DiamondSound.prototype.speak = function(text) {
   this.pitch = this.pitchCollection[Math.floor(Math.random() * (this.pitchCollection.length))];
-  var freq = this.tone.midiToNote(this.pitch+12);
+  var freq = nxMusic.mton(this.pitch+12);
   this.filt.frequency.value = (freq);
   //this.filt2.frequency.value = (freq);
   var rate = Math.floor(Math.random() * (12.)+ 4.);
@@ -164,5 +166,5 @@ DiamondSound.prototype.speak = function(text) {
   if (meSpeak.isConfigLoaded() && meSpeak.isVoiceLoaded(speakVoice)) {
     meSpeak.speak(text);
   }
-  this.synth.triggerAttackRelease(freq, "4n",{} , 0.15);
+  this.synth.triggerAttackRelease(freq, "4n",'+0' , 0.15);
 };
