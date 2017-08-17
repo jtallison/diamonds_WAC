@@ -14,9 +14,12 @@
 	<!-- <script type="text/javascript" src="js/Tone.min.js"></script> -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script type="text/javascript" src="scripts/mespeak/mespeak.full.min.js"></script>
+	<script type="text/javascript" src="scripts/StartAudioContext.js"></script>
 	<script type="text/javascript" src="scripts/Tone.min.js"></script>
 	<script type="text/javascript" src="scripts/nxMusic.js"></script>
 	<script type="text/javascript" src="scripts/DiamondSound.js"></script>
+	<script type="text/javascript" src="data/DiD-reading/readingTexts.js"></script>
+	
 </head>
 
 
@@ -24,13 +27,13 @@
 <body>
 	<div class="wrapper">
 	<div class="welcomeText">
-		<h1 onclick="document.getElementsByClassName('welcomeText')[0].style.display = 'none';document.getElementsByClassName('scoreText')[0].style.display = 'block';">Bound by Digital Countries</h1>
+		<h1 onclick="document.getElementsByClassName('welcomeText')[0].style.display = 'none';document.getElementsByClassName('scoreText')[0].style.display = 'block';">Diamonds in Dystopia</h1>
 		<p>Words | <strong>Vincent A. Cellucci</strong></p>
 		<p>Audio | <strong>Jesse Allison</strong></p>
 		<p>Visuals | <strong>Derick Ostrenko</strong></p>
 		<p>UnMute your phone and Turn up your volume.</p>
 		<p>Then tap the button to begin.</p>
-		<p><a href="#" class="myButton" onclick=" document.getElementsByClassName('welcomeText')[0].style.display = 'none';document.getElementsByClassName('scoreText')[0].style.display = 'block'; document.getElementsByClassName('gentext')[0].style.display = 'block'; document.getElementsByClassName('beforeGentext')[0].style.display = 'block';">Start</a></p>
+		<p><a href="#" id="startButton" class="myButton" onclick="document.getElementsByClassName('welcomeText')[0].style.display = 'none';document.getElementsByClassName('scoreText')[0].style.display = 'block'; document.getElementsByClassName('gentext')[0].style.display = 'block'; document.getElementsByClassName('beforeGentext')[0].style.display = 'block';">Start</a></p>
 		<p><em>Tapping is the new snapping!</em></p>
 	</div> <!-- END welcomeText DIV -->
 
@@ -44,6 +47,11 @@
 
 
 <script>
+		// Launch audio context on interaction (mostly for iOS)
+	StartAudioContext(Tone.context, '#startButton').then(function(){
+		//callback is invoked when the AudioContext.state is 'running'
+	});
+
 
 // (function($) {
 

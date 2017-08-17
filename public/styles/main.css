@@ -177,7 +177,7 @@ small {
 .beforeGentext{
     display: none;
     position: fixed;
-    bottom: 115px;
+    bottom: 165px;
     height: 25px;
     width: 100%;
     left: 0px;
@@ -188,7 +188,7 @@ small {
   display: none;
   position: fixed;
   bottom: 0px;
-  height: 100px;
+  height: 150px;
   width: calc(100% - 35px);
   left: 0px;
   background-color: black;
@@ -198,5 +198,5 @@ small {
   padding-right: 30px;
   padding-left: 15px;
   /*font-family: Courier;*/
-  font-size: calc(1.5vw + 0.5vh);
+  font-size: calc(1.5vw + 1.0vh);
 }

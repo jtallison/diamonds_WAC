@@ -47,6 +47,8 @@ var DiamondSound = function () {
     this.playerKepler.retrigger = 1;
   this.playerEnding = new Tone.Player("data/Ending_for_a_minute.mp3").connect(this.gainMaster);
 
+	this.playerReading = new Tone.Player({url: "data/DiD-reading/0.mp3", "autostart" : true}).connect(this.gainMaster);
+
 
   //this.gainy = new Tone.Gain().connect(this.gainMaster);
   // this.filt2 = new Tone.Filter(nxMusic.mton(this.pitch+12), "bandpass").connect(this.gainy);
@@ -153,6 +155,20 @@ DiamondSound.prototype.triggerDiamonds = function() {
   this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
   this.playerDiamonds.start();
 };
+
+
+// ************** Reading from Files  *****************
+
+DiamondSound.prototype.readText = function (num) {
+	if(readingTexts.hasOwnProperty(num)){
+		this.playerReading.load("data/DiD-reading/" + num + ".mp3");
+		return readingTexts[num];
+	}
+}
+
+
+
+// ************** Speaking with meSpeak  *****************
 
 DiamondSound.prototype.speak = function(text) {
   this.pitch = this.pitchCollection[Math.floor(Math.random() * (this.pitchCollection.length))];
