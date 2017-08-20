@@ -37,18 +37,45 @@ var DiamondSound = function () {
 	this.chordSynth.set('vibratoAmount', 0.5);
 	this.chordSynth.set('vibratoRate', 5);
 	this.chordSynth.set('harmonicity', 1.5);
-//set the attributes using the set interface
-// synth.set("detune", -1200);
+// chordSynth.set("detune", -1200);
 
 
+	// Create a new Tune object
+  this.tune = new Tune();
+  // Load a 12 tone just intonation scale
+  this.tune.loadScale('ji_12');
+  // Set the output mode to 'MIDI' 
+  this.tune.mode.output = 'MIDI';
+  this.tune.key = 69;
+  this.samp = new Tone.Sampler("data/c4.mp3");
+	this.samp.volume.value = -6;
+  this.samp.toMaster();
+
+
+
+		// Audio File Players *******
+				// PreLoad for immediate triggering
   this.playerUtopalypse = new Tone.Player("data/Utopalypse.mp3").connect(this.gainMaster);
   this.playerDiamonds = new Tone.Player("data/diamonds_in_distopia.mp3").connect(this.gainMaster);
   this.playerKepler = new Tone.Player("data/Kepler_Star.mp3").connect(this.gainMaster);
-    this.playerKepler.retrigger = 1;
+  	this.playerKepler.retrigger = 1;
   this.playerEnding = new Tone.Player("data/Ending_for_a_minute.mp3").connect(this.gainMaster);
-
+				// Dynamically loaded readings
 	this.playerReading = new Tone.Player({url: "data/DiD-reading/0.mp3", "autostart" : true}).connect(this.gainMaster);
+		this.playerReading.volume.value = -6;
 
+		// Switch to buffers...
+//		var pianoSamples = new Tone.Buffers({
+//			"C4" : "path/to/C4.mp3"
+//			"C#4" : "path/to/C#4.mp3"
+//			"D4" : "path/to/D4.mp3"
+//			"D#4" : "path/to/D#4.mp3"
+//			...
+//		}, function(){
+//			//play one of the samples when they all load
+//			player.buffer = pianoSamples.get("C4");
+//			player.start();
+//		});
 
   //this.gainy = new Tone.Gain().connect(this.gainMaster);
   // this.filt2 = new Tone.Filter(nxMusic.mton(this.pitch+12), "bandpass").connect(this.gainy);
@@ -69,7 +96,21 @@ var DiamondSound = function () {
   // meSpeak.speak('Diamonds');
   // }
 
+
+		// Anything that needs to be done after the buffers have loaded...
+	Tone.Buffer.on('load', function(){
+    //document.getElementById('loading').style.display = 'none';
+		console.log("All Audio Buffers Loaded ********");
+	});
+	
+	// <div id="loading">
+  //   Loading Samples...
+  // </div>
+
 }
+
+
+
 
 DiamondSound.prototype.audienceEnable = function(enabled) {
 		console.log('enabled? ', enabled);
@@ -83,6 +124,39 @@ DiamondSound.prototype.audienceEnable = function(enabled) {
 		this.chordSynth.set("volume", -96);
 	}
 }
+
+
+
+DiamondSound.prototype.phrygian = function(midi) {
+	return teoria.note.fromMIDI(midi);
+}
+
+
+
+
+// ********* Sampler playing ********
+
+		// dSound.sampPlay(60) || dSound.sampPlay(0,440.)
+DiamondSound.prototype.sampPlay = function(midi) {
+	// console.log("freq: ", freq);
+	// if (freq==null) {
+	// 	freq = nxMusic.mtof(note);
+	// }
+	// console.log("post check freq: ", freq);
+	// var midi = this.tune.key + 12*Math.log(freq/440)/Math.log(2)
+	
+	
+	console.log("midi: ", midi);
+	this.samp.triggerAttack();
+
+	// Detune each piano sample 
+	this.samp.pitch = this.tune.note(midi-this.tune.scale.length)-this.tune.key; 
+	console.log("pitch: ", this.samp.pitch);
+}
+
+
+
+		// ********* Synthesis playing ********
 
 DiamondSound.prototype.playPitch = function () {
   this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
@@ -131,6 +205,12 @@ DiamondSound.prototype.playChordSplit = function () {
 DiamondSound.prototype.playChordDiads = function () {
 
 };
+
+
+
+
+
+
 
 DiamondSound.prototype.playUtopalypse = function() {
   this.playerKepler.start();

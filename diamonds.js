@@ -84,6 +84,8 @@ if(cluster.isMaster) {
 	// ---- Kickoff a Worker! -----
 	startWorker();
 
+	var readingTexts = require('./public/data/DiD-reading/readingTexts.json');
+
 	var rita = require('rita');
 
 	var dataObj = [];
@@ -329,12 +331,18 @@ if(cluster.isMaster) {
 		})
 
 
+			// **** Max Controller Receiving ****
 
 		socket.on('audience/enable', function(data) {
 			console.log("audience/enable", data);
 			io.sockets.emit('audienceEnable', data);
 		});
 		
+			// Reading Text on every user by line number
+		socket.on('readText', function(data) {
+			console.log("readText", readingTexts[data]);
+			io.sockets.emit('readText', data);
+		});
 		
 		socket.on('nextChord', function(data) {
 			redisClient.get('audioControllerID', function(err, reply) {

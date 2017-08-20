@@ -16,17 +16,16 @@
 
 <body>
 
-	<button onclick="socket.emit('triggerBeginning')">Beginning</button>
+	<button onclick="beginning()">Beginning</button>
 	<button onclick="socket.emit('nextChord')">New Chords</button>
-	<button onclick="socket.emit('triggerUtopalypse')">Utopia is our Apocalypse</button>
-	<button onclick="socket.emit('triggerDiamonds')">Diamonds in Distopia</button>
-	<button onclick="socket.emit('triggerEnding')">Ending</button>
+	<button onclick="utopalypse()">Utopia is our Apocalypse</button>
+	<button onclick="diamonds()">Diamonds in Distopia</button>
+	<button onclick="ending()">Ending</button>
 
 
 
 <script>
 
-	// var socket = io.connect('127.0.0.1:8000');
 	var socket = io.connect(window.location.origin , {transports:['websocket']} );
 	// var socket = io.connect('https://atlab.cct.lsu.edu/', { path: '/causeway/socket.io' });
 
@@ -35,6 +34,8 @@
 
 	socket.emit('addme', {name: "audio_controller", color: myColor, note: 60, location: myLocation});
 
+		// **** Commands from the Server to Max ****
+	
 	socket.on('setSection', function(data) {
 		console.log("The section is now: " + data.title);
 	});
@@ -77,6 +78,7 @@
 		return color;
 	}
 
+		// **** Commands from Max to the Server ****
 
 	document.addEventListener('DOMContentLoaded', function() {
 		window.max.outlet('DOM ready');
@@ -84,10 +86,63 @@
 		var dictName = 'testDict';
 		var dictText = document.getElementById('dict');
 
+			// Primary Control Functions
+			
+			
+		window.max.bindInlet('silence', function() {
+			socket.emit('silence');
+		});
+
+		window.max.bindInlet('audience/enable', function(enabled) {
+			socket.emit('audience/enable', enabled);
+		});
+
 		window.max.bindInlet('resetCounter', function() {
 			i = 0;
 			window.max.outlet('reset');
 		});
+		
+			// Triggering Specific Events
+		window.max.bindInlet('triggerBeginning', function() {
+			beginning();
+		});
+
+		function beginning() {
+			socket.emit('triggerBeginning');
+		}
+
+		window.max.bindInlet('triggerUtopalypse', function() {
+			utopalypse();
+		});
+
+		function utopalypse() {
+			socket.emit('triggerUtopalypse')
+		}
+
+		window.max.bindInlet('triggerDiamonds', function() {
+			diamonds();
+		});
+
+		function diamonds() {
+			socket.emit('triggerDiamonds');
+		}
+
+		window.max.bindInlet('triggerEnding', function() {
+			ending();
+		});
+
+		function ending() {
+			socket.emit('triggerEnding');
+		}
+		
+		
+			// Reading Text on every user by line number
+		window.max.bindInlet('readText', function(num) {
+			socket.emit('readText', num);
+		});
+		
+		
+			// Chords, Notes, Playing audience as synth
 
 		window.max.bindInlet('playChord', function() {
 			var notes = [];
@@ -97,14 +152,6 @@
 			    }
 			}
 			socket.emit('playChord', {notes:notes, duration:'8m'});
-		});
-		
-		window.max.bindInlet('silence', function() {
-			socket.emit('silence');
-		});
-		
-		window.max.bindInlet('audience/enable', function(enabled) {
-			socket.emit('audience/enable', enabled);
 		});
 
 		window.max.bindInlet('sustainChord', function() {
@@ -116,6 +163,7 @@
 			}
 			socket.emit('sustainChord', {notes:notes, duration:'8m'});
 		});
+		
 		
 		document.getElementById('the_click_button').addEventListener('click', function() {
 			window.max.outlet('click', ++i);

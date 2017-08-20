@@ -16,6 +16,8 @@
 	<script type="text/javascript" src="scripts/mespeak/mespeak.full.min.js"></script>
 	<script type="text/javascript" src="scripts/StartAudioContext.js"></script>
 	<script type="text/javascript" src="scripts/Tone.min.js"></script>
+	<script type="text/javascript" src="scripts/Tune.js"></script>
+	<script type="text/javascript" src="scripts/teoria.js"></script>
 	<script type="text/javascript" src="scripts/nxMusic.js"></script>
 	<script type="text/javascript" src="scripts/DiamondSound.js"></script>
 	<script type="text/javascript" src="data/DiD-reading/readingTexts.js"></script>
@@ -27,7 +29,7 @@
 <body>
 	<div class="wrapper">
 	<div class="welcomeText">
-		<h1 onclick="document.getElementsByClassName('welcomeText')[0].style.display = 'none';document.getElementsByClassName('scoreText')[0].style.display = 'block';">Diamonds in Dystopia</h1>
+		<h1>Diamonds in Dystopia</h1>
 		<p>Words | <strong>Vincent A. Cellucci</strong></p>
 		<p>Audio | <strong>Jesse Allison</strong></p>
 		<p>Visuals | <strong>Derick Ostrenko</strong></p>
@@ -163,6 +165,7 @@ setInterval(updateGradient,20);
 var socket = io.connect(window.location.origin , {transports:['websocket']} );
 var myColor = getRandomColor();
 var myLocation = [0.5, 0.5];	// Default centered
+var readGenText = true;
 
 // seatMap.addEventListener("click", getClickPosition, false);
 
@@ -173,7 +176,7 @@ function actOnText() {
 	modText = '';
 
 	for (var i = 0; i < contents.length; i++) {
-		modText += '<span>' + contents[i] + '</span> ';
+		modText += '<span class="s_' + contents[i].trim() + '">' + contents[i] + '</span> ';
 	}
 
 	$('.scoreText').html(modText);
@@ -231,32 +234,60 @@ socket.on('setSection', function(data) {
 
 });
 
-// function scrollto(element){
-// 	var ele = document.getElementsByClassName("s"+element)[0];
-//     if (ele) {
-//     	window.scrollTo(0, ele.offsetTop);
-//     }
-// }
+function scrollto(element){
+	var page = $('html, body');
+	var ele = document.getElementsByClassName("s_"+element.trim())[0];
+    if (ele) {
+    	// window.scrollTo(0, ele.offsetTop);
+			// - or -
+    	// window.scrollTo({
+			//   top: ele.offsetTop, 
+			//   left: 0, 
+			//   behavior: 'smooth' 
+			// });
+			
+			// - or with jQuery - 
+			page.animate({ scrollTop: ele.offsetTop }, 1000, function(){
+				page.off("scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove touch");
+			});
+			
+			page.on("scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove touch", function(){
+			    page.stop();
+			});
+			
+    }
+}
+
 
 socket.on('itemback', function(data){
 	console.log("itemback:", data.phrase);
 	var elements = document.getElementsByClassName("gentext")[0];
 	elements.innerHTML = data.phrase; 
+	
+	if(readGenText) {
+		dSound.speak(data.phrase);
+	}
+
 	// elements[0].className += " clicked";
+
 });
 
-// function clickgo() {
-// 	var elements = document.getElementsByClassName(this.className);
-// 	socket.emit('item', elements[0].className.split(" ")[1]);
-// 	elements[0].className += " clicked";
-// 	elements[0].style.backgroundColor = myColor;
-// }
 
+	// **** Dealing with control commands from Max ****
 
 socket.on('audienceEnable', function(data) {
 	console.log('enabled? ', data);
 	dSound.audienceEnable(data);
 });
+
+	// Reading Text by line number
+socket.on('readText', function(data) {
+	console.log("readText", readingTexts[data]);
+	dSound.readText(data);
+	var words = readingTexts[data].split(" ");
+	scrollto(words[0]); // find the first word of the phrase and scroll to it.
+});
+
 
 socket.on('playChord', function(data) {
 	dSound.playChord(data.notes, data.duration);
