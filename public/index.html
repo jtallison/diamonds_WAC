@@ -283,9 +283,11 @@ socket.on('audienceEnable', function(data) {
 	// Reading Text by line number
 socket.on('readText', function(data) {
 	console.log("readText", readingTexts[data]);
-	dSound.readText(data);
-	var words = readingTexts[data].split(" ");
-	scrollto(words[0]); // find the first word of the phrase and scroll to it.
+	if (Math.random() < dSound.readingRatio) {
+		dSound.readText(data);
+		var words = readingTexts[data].split(" ");
+		scrollto(words[0]); // find the first word of the phrase and scroll to it.
+	}
 });
 
 

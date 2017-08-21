@@ -2,7 +2,9 @@ var DiamondSound = function () {
   this.tone = new Tone();
 
 
-  this.pitchCollection = [55, 57, 59, 61, 62, 64, 66, 67, 68, 69, 71, 73, 75, 76, 78, 80, 82, 83];
+  //this.pitchCollection = [55, 57, 59, 61, 62, 64, 66, 67, 68, 69, 71, 73, 75, 76, 78, 80, 82, 83];
+  this.pitchCollection = [56, 58, 60, 62, 63, 65, 67, 68, 69, 70, 72, 74, 76, 77, 79, 81, 83, 84];
+
   this.pitch = this.pitchCollection[Math.floor(Math.random() * (this.pitchCollection.length))];
 
   this.chord = [68, 71, 75];
@@ -19,20 +21,20 @@ var DiamondSound = function () {
     //"wet": 0.8
   }).connect(this.gainMaster).start();
 
-  this.synth = new Tone.Synth({
-    "oscillator" : {
-      "type" : "sine"
-   },
-   "envelope" : {
-    "attack" : 2.0,
-    "decay" : 0.5,
-    "sustain" : 0.8,
-    "release" : 2.0
-   }
-  }).connect(this.tremolo);
+  //this.synth = new Tone.Synth({
+  //  "oscillator" : {
+  //    "type" : "sine"
+  // },
+  // "envelope" : {
+  //  "attack" : 2.0,
+  //  "decay" : 0.5,
+  //  "sustain" : 0.8,
+  //  "release" : 2.0
+  // }
+  //}).connect(this.tremolo);
 	
-  this.chordSynth = new Tone.PolySynth(4, Tone.DuoSynth).connect(this.gainMaster);
-	this.chordVolume = -40;
+  this.chordSynth = new Tone.PolySynth(4, Tone.DuoSynth).connect(this.tremolo);
+	this.chordVolume = -30;
   this.chordSynth.set("volume", this.chordVolume);
 	this.chordSynth.set('vibratoAmount', 0.5);
 	this.chordSynth.set('vibratoRate', 5);
@@ -51,6 +53,8 @@ var DiamondSound = function () {
 	this.samp.volume.value = -6;
   this.samp.toMaster();
 
+
+	this.readingRatio = 0.4;		// limiting the number of times you read the current text.
 
 
 		// Audio File Players *******
@@ -159,11 +163,11 @@ DiamondSound.prototype.sampPlay = function(midi) {
 		// ********* Synthesis playing ********
 
 DiamondSound.prototype.playPitch = function () {
-  this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
+  //this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
 };
 
 DiamondSound.prototype.triggerPitch = function () {
-  this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
+  //this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
   // socket.emit('triggerPitch', dSound.pitch);
 };
 
@@ -232,7 +236,8 @@ DiamondSound.prototype.playEnding = function() {
 
 
 DiamondSound.prototype.triggerDiamonds = function() {
-  this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
+  // this.synth.triggerAttackRelease(nxMusic.mton(this.pitch+12), 5);
+	this.chordSynth.triggerAttackRelease(nxMusic.mton(this.pitch+12), '4m');
   this.playerDiamonds.start();
 };
 
@@ -256,11 +261,12 @@ DiamondSound.prototype.speak = function(text) {
   this.filt.frequency.value = (freq);
   //this.filt2.frequency.value = (freq);
   var rate = Math.floor(Math.random() * (12.)+ 4.);
-  this.tremolo.frequency.value = freq;
+  this.tremolo.frequency.value = rate;
 
       // check for safety - iOS will fail if you try to say something and can't
   if (meSpeak.isConfigLoaded() && meSpeak.isVoiceLoaded(speakVoice)) {
     meSpeak.speak(text);
   }
-  this.synth.triggerAttackRelease(freq, "4n",'+0' , 0.15);
+  //this.synth.triggerAttackRelease(freq, "4n",'+0' , 0.15);
+	this.chordSynth.triggerAttackRelease(freq, '2n');
 };
