@@ -20,8 +20,8 @@
 //  - redis for interworker communications/data
 
 var cluster = require('cluster');
-// var workerNumber = require('os').cpus().length*2;
-var workerNumber = 4;
+var workerNumber = require('os').cpus().length*2;
+//var workerNumber = 4;
 var express = require('express');
 var http = require('http');
 var sio = require('socket.io');
@@ -32,7 +32,7 @@ var redisClient;
 
 // Below process.env variables allow you to set parameters when starting the application.
 // For example you can run, sudo PORT=8080 WORKERS=32 node appCluster.js.
-var serverPort = process.env.PORT || 8080;
+var serverPort = process.env.PORT || 80;
 var workers = process.env.WORKERS || workerNumber;
 var redisPort = process.env.REDISPORT || 6379;
 var redisIP = process.env.REDISIP || "localhost";
