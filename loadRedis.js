@@ -9,10 +9,15 @@
 // load required modules
 var redis = require("redis");
 // var client = redis.createClient();
-// var client = redis.createClient('redis://redis-diamonds:10000'); // Render.com redis server
-var client = redis.createClient({
-  url: 'redis://redis-diamonds:10000'
-}); // Render.com redis server
+var client = redis.createClient('redis://redis-diamonds:10000'); // Render.com redis server
+// var client = redis.createClient({
+//   url: 'redis://redis-diamonds:10000'
+// }); // Render.com redis server
+
+// const client = redis.createClient({
+//   host: "redis-diamonds",
+//   port: 10000
+// });
 
 var csv = require('csv-parser');
 var fs = require('fs');
@@ -39,7 +44,7 @@ var dataSet = "data/corpus.csv";
 // 	console.log("---Trimmed---");
 // }
 
-client.flushall( function (err, res) {
+client.flushall('ASYNC', function (err, res) {
     console.log("flush", res); // will be true if successfull
     // Load the data.
 	fs.createReadStream(dataSet).pipe(csv()).on('data', handleRow).on('end', handleEnd);
