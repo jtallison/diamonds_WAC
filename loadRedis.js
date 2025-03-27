@@ -9,7 +9,7 @@
 // load required modules
 var redis = require("redis");
 // var client = redis.createClient();
-var client = redis.createClient({host: 'redis-51y2', port: 10000}); // Render.com redis server
+var client = redis.createClient('redis://redis-51y2:10000'); // Render.com redis server
 
 var csv = require('csv-parser');
 var fs = require('fs');
