@@ -4,11 +4,17 @@
   "description": "interactive system for poetry",
   "main": "diamonds.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+        "start": "node diamonds.js",
+        "start-80": "PORT=80 node diamonds.js",
+        "redis": "docker run --name some-redis -p 6379:6379 -d redis:5",
+        "redis-persist": "docker run --name some-redis -d redis:5 redis-server --appendonly yes -p 6379:6379",
+        "install-redis": "docker pull redis",
+        "corpus-prep": "node ./js/loadCorpus.js",
+        "gcloud-deploy": "gcloud app deploy"
+    },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jesseallison/diamonds_WAC.git"
+    "url": "https://github.com/jtallison/diamonds_WAC.git"
   },
   "keywords": [
     "poetry",
