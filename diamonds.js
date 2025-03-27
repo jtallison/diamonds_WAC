@@ -39,7 +39,7 @@ var workers = process.env.WORKERS || workerNumber;
 // var redisUrl = process.env.REDISURL || 'redis://'+ redisIP +':' + redisPort;
 // Render - redis-51y2:10000
 var redisPort = process.env.REDISPORT || 10000;
-var redisIP = process.env.REDISIP || "redis-51y2";
+var redisIP = process.env.REDISIP || "redis-diamonds";
 var redisUrl = process.env.REDISURL || 'redis://'+ redisIP +':' + redisPort;
 
 var app = express();

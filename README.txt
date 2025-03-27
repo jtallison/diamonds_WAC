@@ -1,6 +1,11 @@
 # Diamonds
 A system for interactive poetry.
 
+Deploy on render
+
+[run a redis server](https://github.com/render-examples/redis)
+
+
 ## Tasks
 
 ### To Do Now
