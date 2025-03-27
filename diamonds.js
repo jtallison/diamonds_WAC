@@ -64,7 +64,7 @@ function startWorker() {
 
 	console.log('Redis adapter started with url: ' + redisUrl);
 
-	redisClient = redis.createClient();
+	redisClient = redis.createClient('redis://redis-diamonds:10000');
 	redisClient.on("error", function (err) {
    		console.log("Error " + err);
 	});
