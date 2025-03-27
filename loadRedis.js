@@ -10,6 +10,7 @@
 var redis = require("redis");
 // var client = redis.createClient();
 var client = redis.createClient('redis://redis-diamonds:10000'); // Render.com redis server
+
 // var client = redis.createClient({
 //   url: 'redis://redis-diamonds:10000'
 // }); // Render.com redis server
