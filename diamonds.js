@@ -34,8 +34,12 @@ var redisClient;
 // For example you can run, sudo PORT=8080 WORKERS=32 node appCluster.js.
 var serverPort = process.env.PORT || 80;
 var workers = process.env.WORKERS || workerNumber;
-var redisPort = process.env.REDISPORT || 6379;
-var redisIP = process.env.REDISIP || "localhost";
+// var redisPort = process.env.REDISPORT || 6379;
+// var redisIP = process.env.REDISIP || "localhost";
+// var redisUrl = process.env.REDISURL || 'redis://'+ redisIP +':' + redisPort;
+// Render - redis-51y2:10000
+var redisPort = process.env.REDISPORT || 10000;
+var redisIP = process.env.REDISIP || "redis-51y2";
 var redisUrl = process.env.REDISURL || 'redis://'+ redisIP +':' + redisPort;
 
 var app = express();

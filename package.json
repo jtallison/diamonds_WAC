@@ -2,7 +2,7 @@
   "name": "diamonds",
   "version": "0.0.3",
   "description": "interactive system for poetry",
-  "main": "app.js",
+  "main": "diamonds.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
